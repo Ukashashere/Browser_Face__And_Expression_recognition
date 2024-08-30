@@ -4,14 +4,17 @@ const emotionDisplay = document.getElementById('emotion');
 Promise.all([
     faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
     faceapi.nets.faceExpressionNet.loadFromUri('/models')
-]).then(startVideo);
+]).then(startVideo).catch(err => console.error('Error loading models:', err));
 
 function startVideo() {
-    navigator.mediaDevices.getUserMedia({ video: {} })
+    navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
             video.srcObject = stream;
         })
-        .catch(err => console.error('Error accessing webcam: ', err));
+        .catch(err => {
+            console.error('Error accessing webcam:', err);
+            alert('Error accessing webcam: ' + err.message);
+        });
 }
 
 video.addEventListener('play', () => {
